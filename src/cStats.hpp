@@ -1,5 +1,6 @@
 #include <string>
 #include <memory>
+#include "cCpuStats.hpp"
 
 /**
  * @file cStats.hpp
