@@ -4,7 +4,7 @@
 
 /**
  * @file cStats.hpp
- * @author your name (you@domain.com)
+ * @author lmengnr
  * @brief holds the stats classes. The class's basic objective is to return the specific statistics it's 
  *        observing
  * @version 0.1
@@ -33,15 +33,19 @@ public:
  class cCPUStats : public IStats
  {
  private:
-    /* data */
+    cCpuStatObserver m_oCpuStats;
  public:
-    cCPUStats(/* args */){}
+    cCPUStats(/* args */)
+    {
+        m_oCpuStats.StartReadThread();
+
+    }
     ~cCPUStats(){}
 
     std::string getStats() override
     {
         //TODO: Place holder for now, retrun proper statistic later
-        return "CPU usage: No. of Processes: ";
+        return "CPU usage: " + std::to_string(m_oCpuStats.GetCurrCpuUsage());
     }
 
  };
