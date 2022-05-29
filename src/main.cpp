@@ -11,4 +11,8 @@ int main()
 
     std::cout << oRamConfig.getStats() << std::endl;
 
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    std::cout << oRamConfig.getStats() << std::endl;
+
 }

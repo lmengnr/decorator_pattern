@@ -11,7 +11,7 @@
 /**
  * @brief This is a class to read and calculate the cpu usage statistics
 */
-class cCpuStats
+class cCpuStatObserver
 {
 private:
   /// For calculating the CPU percentage
@@ -32,8 +32,8 @@ private:
 
   
 public:
-  cCpuStats(/* args */);
-  ~cCpuStats();
+  cCpuStatObserver(/* args */);
+  ~cCpuStatObserver();
 
   void StartReadThread();
 
@@ -48,18 +48,18 @@ public:
 ////////////////////// METHOD DEFINITIONS /////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-cCpuStats::cCpuStats(/* args */)
+cCpuStatObserver::cCpuStatObserver(/* args */)
 {
 
 }
 
-cCpuStats::~cCpuStats()
+cCpuStatObserver::~cCpuStatObserver()
 {
   m_statThread->join();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void cCpuStats::UpdateCpuUsage()
+void cCpuStatObserver::UpdateCpuUsage()
 {
   u_int totalUser, totalUserLow, totalSys, totalIdle, total;
   double percent;
@@ -100,13 +100,13 @@ void cCpuStats::UpdateCpuUsage()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void cCpuStats::StartReadThread()
+void cCpuStatObserver::StartReadThread()
 {
-  m_statThread = std::make_shared<std::thread>(std::thread(LaunchObserver));
+  m_statThread = std::make_shared<std::thread>(std::thread(&cCpuStatObserver::LaunchObserver, this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void cCpuStats::LaunchObserver()
+void cCpuStatObserver::LaunchObserver()
 {
   while(1)
   {
