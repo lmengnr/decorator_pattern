@@ -73,7 +73,34 @@ public:
 class cRamWrapper : public IStatsWrapper
 {
 private:
-    /* data */
+    double getRam()
+    {
+        std::ifstream filestat("/proc/meminfo");
+        std::string stat_line;
+        std::getline(filestat, stat_line);
+
+        uint32_t nTotalMemory;
+        std::string label;
+        uint32_t nAvailableMem;
+
+        std::stringstream ramStream;
+
+        ramStream << stat_line;
+
+        ramStream >> label;
+        ramStream >> nTotalMemory;
+
+        std::getline(filestat, stat_line);
+        std::getline(filestat, stat_line);
+
+        ramStream.clear();
+        label.clear();
+        ramStream << stat_line;
+        ramStream >> label;
+        ramStream >> nAvailableMem;
+
+        return ((nTotalMemory - nAvailableMem)/(double)nTotalMemory) * 100;
+    }
 public:
     cRamWrapper(std::shared_ptr<IStats> pSource)
     : IStatsWrapper(pSource)
@@ -82,7 +109,7 @@ public:
 
     std::string getStats() override
     {
-        return oStatObj->getStats() + " RAM usage: ";
+        return oStatObj->getStats() + " RAM usage: " + std::to_string(getRam());
     }
 };
 
