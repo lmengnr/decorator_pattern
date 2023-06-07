@@ -30,6 +30,7 @@ private:
 
   void LaunchObserver();
 
+  bool isRunning = false;
   
 public:
   cCpuStatObserver(/* args */);
@@ -55,6 +56,7 @@ cCpuStatObserver::cCpuStatObserver(/* args */)
 
 cCpuStatObserver::~cCpuStatObserver()
 {
+  isRunning = false;
   m_statThread->join();
 }
 
@@ -102,13 +104,14 @@ void cCpuStatObserver::UpdateCpuUsage()
 ///////////////////////////////////////////////////////////////////////////////
 void cCpuStatObserver::StartReadThread()
 {
+  isRunning = true;
   m_statThread = std::make_shared<std::thread>(std::thread(&cCpuStatObserver::LaunchObserver, this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void cCpuStatObserver::LaunchObserver()
 {
-  while(1)
+  while(isRunning)
   {
     UpdateCpuUsage();
     std::this_thread::sleep_for(std::chrono::seconds(1));
